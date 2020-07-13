@@ -31,8 +31,8 @@ LABEL io.k8s.description="Plattform for building and running static sites with N
       com.redhat.deployments-dir="${APP_ROOT}/src" \
       com.redhat.dev-mode.port="DEBUG_PORT:5858"\
       io.origin.builder-version="$GIT_VERSION" \
-      name="jshmrtn/s2i-nodejs-nginx" \
-      maintainer="Jeremy Zahner <zahner@joshmartin.ch>" \
+      name="evanshortiss/s2i-nodejs-nginx" \
+      maintainer="Evan Shortiss <evanshortiss@gmail.com>" \
       version="$NODE_VERSION"
 
 # Download and install a binary from nodejs.org
