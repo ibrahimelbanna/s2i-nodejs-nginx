@@ -2,7 +2,7 @@
 
 echo "---> Compiling your static assets..."
 if [[ -f yarn.lock ]]; then
-  yarn run compile
+  yarn run build
 else
-  npm run compile
+  npm run build
 fi
