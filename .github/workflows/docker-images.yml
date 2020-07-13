@@ -8,6 +8,7 @@ on:
 
 env:
   IMAGE_NAME: s2i-nodejs-nginx
+  QUAY_USER: evanshortiss
 
 jobs:
   # Run tests.
