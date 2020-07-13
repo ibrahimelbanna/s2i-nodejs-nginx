@@ -1,30 +1,33 @@
-# S2I: NodeJS / NGINX
+# S2I: Node.js / NGINX
 
-## Releases / Versions
+This is an updated fork of 
+[jshmrtn/s2i-nodejs-nginx](https://github.com/jshmrtn/s2i-nodejs-nginx). Full
+credit to them for creating this 🤘
 
-[Node.JS versions currently provided](https://hub.docker.com/r/jshmrtn/s2i-nodejs-nginx/tags/):
+## Node.js Releases / Versions
 
-- 4
-- 5
-- 6
-- 7
-- 8 (lts)
-- 9
-- 10 (latest)
+- 10
+- 12
+- 14
 
-We will no minor versions. If using this builder, you should always set major versions or lts/latest.
+Minor versions cannot be specified. The tag will always point to the latest
+release for that major version.
 
 ## Usage
 
 OpenShift allows you to quickly start a build using the web console, or the CLI.
 
-With the [`oc` command-line tool](https://github.com/openshift/origin/releases) you can bundle a static project (based on NodeJS, for example Webpack) into a centos7 image running only NGINX.:
+With the [`oc` command-line tool](https://github.com/openshift/origin/releases)
+you can bundle a static project (based on a Node.js build setup, for example
+Webpack) into a centos7 image running only NGINX:
 
-    oc new-app jshmrtn/s2i-nodejs-nginx:RELEASE~REPO_URL
+```bash
+oc new-app quay.io/evanshortiss/s2i-nodejs-nginx:RELEASE~REPO_URL
+```
 
-### Configuration
+## Configuration
 
-#### nginx.conf
+### nginx.conf
 
 You can add your custom `nginx.conf` to the container. While assembling, the builder looks for a nginx.conf file in your projects `.s2i/nginx/` directory. If there is a `nginx.conf` present at `.s2i/nginx/nginx.conf`, it will copy all contents of the `.s2i/nginx/` directory and put it into the target images `/opt/app-root/etc` directory. There the custom nginx.conf file will be used.
 
@@ -38,7 +41,7 @@ else
 fi
 ```
 
-#### nginx.conf includes
+### nginx.conf includes
 
 You can include files in your custom configuration. This is useful if you have many configuration files. If you provide the builder with a custom nginx.conf file in your projects `.s2i/nginx/` directory, all other files inside `.s2i/nginx/` will be copied along as well. So you could for example include a file with mime types in your custom nginx.conf. Add the file `.s2i/nginx/mime.types` to your project and include it like this:
 
@@ -46,25 +49,13 @@ You can include files in your custom configuration. This is useful if you have m
 include       /opt/app-root/etc/mime.types;
 ```
 
-#### Basic Auth
+### Basic Auth
 
-The builder can add basic auth to the container for you. All you need to do is to set some environment variables.
-**IMPORTANT: You need to set these on the build config!**
+The builder can add basic auth to the container for you. All you need to do is
+to set some environment variables.
 
-```bash
-BASICAUTH_USERNAME
-```
+*Note: These must be set on the OpenShift BuildConfig*
 
-The username used for basic auth.
-
-```bash
-BASICAUTH_PASSWORD
-```
-
-The password used for basic auth.
-
-```bash
-BASICAUTH_TITLE
-```
-
-The title used for basic auth.
+* BASICAUTH_USERNAME - the username used for basic auth.
+* BASICAUTH_PASSWORD - the password used for basic auth.
+* BASICAUTH_TITLE - the title used for basic auth.
