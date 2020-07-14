@@ -23,7 +23,7 @@ ENV NPM_BUILD_COMMAND=start \
     NODE_ENV=production \
     DEV_MODE=false
 
-LABEL io.k8s.description="Plattform for building and running static sites with Node.js and NGINX." \
+LABEL io.k8s.description="Platform for building and running static sites with Node.js and NGINX." \
       io.k8s.display-name="build-nodejs-nginx Node.js v$NODE_VERSION" \
       io.openshift.expose-services="8080:http" \
       io.openshift.tags="builder,nodejs,nodejs$NODE_VERSION,nginx" \
