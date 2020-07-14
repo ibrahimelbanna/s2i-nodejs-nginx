@@ -1,4 +1,4 @@
-FROM centos/nginx-112-centos7:latest
+FROM centos/nginx-116-centos7:latest
 
 # This image provides a Node.JS environment you can use to run your Node.JS
 # applications.
@@ -23,8 +23,8 @@ ENV NPM_BUILD_COMMAND=start \
     NODE_ENV=production \
     DEV_MODE=false
 
-LABEL io.k8s.description="Plattform for building and running static sites with NodeJS and NGINX." \
-      io.k8s.display-name="build-nodejs-nginx NodeJS v$NODE_VERSION" \
+LABEL io.k8s.description="Plattform for building and running static sites with Node.js and NGINX." \
+      io.k8s.display-name="build-nodejs-nginx Node.js v$NODE_VERSION" \
       io.openshift.expose-services="8080:http" \
       io.openshift.tags="builder,nodejs,nodejs$NODE_VERSION,nginx" \
       com.redhat.dev-mode="DEV_MODE:false" \
