@@ -42,6 +42,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Log into the quay.io registry
+        run: echo "${{ secrets.QUAY_ROBOT_PASS }}" | docker login quay.io -u ${{ secrets.QUAY_ROBOT_NAME }} --password-stdin
+
       - name: Build Node.js v14 image
         run: docker build . --file 14.Dockerfile --tag quay.io/$QUAY_USER/$IMAGE_NAME:14
       
@@ -50,9 +53,6 @@ jobs:
 
       - name: Build Node.js v10 image
         run: docker build . --file 10.Dockerfile --tag quay.io/$QUAY_USER/$IMAGE_NAME:10
-
-      - name: Log into registry
-        run: echo "${{ secrets.QUAY_ROBOT_PASS }}" | docker login quay.io -u ${{ secrets.QUAY_ROBOT_NAME }} --password-stdin
 
       - name: Push images to quay.io
         run: |
