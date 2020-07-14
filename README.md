@@ -27,9 +27,19 @@ oc new-app quay.io/evanshortiss/s2i-nodejs-nginx:RELEASE~REPO_URL
 
 ## Configuration
 
-### nginx.conf
+### Defaults
 
-You can add your custom `nginx.conf` to the container. While assembling, the builder looks for a nginx.conf file in your projects `.s2i/nginx/` directory. If there is a `nginx.conf` present at `.s2i/nginx/nginx.conf`, it will copy all contents of the `.s2i/nginx/` directory and put it into the target images `/opt/app-root/etc` directory. There the custom nginx.conf file will be used.
+The out of the box configuration does the following:
+
+* Listens on port 8080
+* Serves *dist/index.html* for the `/` route
+* Applies GZIP compression to text-based assets larger than 1000 bytes
+* Logs at INFO level to stdout
+* Includes NGINX default mime type mappings
+
+### Customising nginx.conf
+
+You can add your custom `nginx.conf` to the container. While assembling, the builder looks for a nginx.conf file in your project `.s2i/nginx/` directory. If there is a `nginx.conf` present at `.s2i/nginx/nginx.conf`, it will copy all contents of the `.s2i/nginx/` directory and put it into the target images `/opt/app-root/etc` directory. There the custom nginx.conf file will be used.
 
 ```bash
 if [[ -f .s2i/nginx/nginx.conf ]]; then
