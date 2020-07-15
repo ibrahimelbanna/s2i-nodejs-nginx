@@ -25,9 +25,7 @@ jobs:
             docker-compose --file docker-compose.test.yml build
             docker-compose --file docker-compose.test.yml run sut
           else
-            docker build . --file 14.Dockerfile
-            docker build . --file 12.Dockerfile
-            docker build . --file 10.Dockerfile
+            echo "TODO: image testing"
           fi
 
   # Push image to GitHub Packages.
@@ -54,8 +52,12 @@ jobs:
       - name: Build Node.js v10 image
         run: docker build . --file 10.Dockerfile --tag quay.io/$QUAY_USER/$IMAGE_NAME:10
 
+      - name: Tag Node.js v14 as latest
+        run: docker tag quay.io/$QUAY_USER/$IMAGE_NAME:14 quay.io/$QUAY_USER/$IMAGE_NAME:latest
+
       - name: Push images to quay.io
         run: |
+          docker push quay.io/$QUAY_USER/$IMAGE_NAME:latest
           docker push quay.io/$QUAY_USER/$IMAGE_NAME:14
           docker push quay.io/$QUAY_USER/$IMAGE_NAME:12
           docker push quay.io/$QUAY_USER/$IMAGE_NAME:10
