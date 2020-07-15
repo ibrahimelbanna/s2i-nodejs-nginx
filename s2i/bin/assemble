@@ -1,7 +1,5 @@
 #!/bin/bash -e
 
-export NODE_ENV=production
-
 if [[ "$1" == "-h" ]]; then
   # If the 's2i-nodejs-nginx' assemble script is executed with '-h' flag,
   # print the usage.
