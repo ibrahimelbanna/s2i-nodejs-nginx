@@ -20,7 +20,6 @@ ENV NPM_BUILD_COMMAND=start \
     NPM_VERSION=6 \
     YARN_VERSION=1.7.0 \
     DEBUG_PORT=5858 \
-    NODE_ENV=production \
     DEV_MODE=false
 
 LABEL io.k8s.description="Platform for building and running static sites with Node.js and NGINX." \

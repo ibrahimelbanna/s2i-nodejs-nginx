@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-echo "---> Installing your NodeJS dependencies..."
+echo "---> Installing your Node.js dependencies..."
 if [[ -f yarn.lock ]]; then
   yarn config set prefix $(npm config get prefix)
   yarn config set cache-folder "$HOME/.yarn-cache"
