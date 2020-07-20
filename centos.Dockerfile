@@ -1,7 +1,8 @@
-FROM centos/nginx-116-centos7:latest
+ARG NODE_VERSION
+ARG NPM_VERSION
+ARG YARN_VERSION
 
-# This image provides a Node.JS environment you can use to run your Node.JS
-# applications.
+FROM centos/nginx-116-centos7:latest
 
 EXPOSE 8080
 
@@ -11,24 +12,19 @@ USER root
 # See https://docs.npmjs.com/misc/scripts, and your repo's package.json
 # file for possible values of NPM_RUN
 
-ENV NPM_BUILD_COMMAND=start \
-    NPM_CONFIG_LOGLEVEL=info \
+ENV NPM_CONFIG_LOGLEVEL=info \
     NPM_CONFIG_PREFIX=$HOME/.npm-global \
     PATH=$HOME/node_modules/.bin/:$HOME/.npm-global/bin/:$PATH \
-    NODE_VERSION=10.21.0 \
-    GIT_VERSION=master \
-    NPM_VERSION=6 \
-    YARN_VERSION=1.7.0 \
-    DEBUG_PORT=5858 \
-    DEV_MODE=false
+    NODE_VERSION=${NODE_VERSION} \
+    NPM_VERSION=${NPM_VERSION} \
+    YARN_VERSION=${YARN_VERSION} \
+    GIT_VERSION=master
 
-LABEL io.k8s.description="Platform for building and running static sites with Node.js and NGINX." \
+LABEL io.k8s.description="Platform for building and running static sites with Node.js and NGINX" \
       io.k8s.display-name="build-nodejs-nginx Node.js v$NODE_VERSION" \
       io.openshift.expose-services="8080:http" \
       io.openshift.tags="builder,nodejs,nodejs$NODE_VERSION,nginx" \
-      com.redhat.dev-mode="DEV_MODE:false" \
       com.redhat.deployments-dir="${APP_ROOT}/src" \
-      com.redhat.dev-mode.port="DEBUG_PORT:5858"\
       io.origin.builder-version="$GIT_VERSION" \
       name="evanshortiss/s2i-nodejs-nginx" \
       maintainer="Evan Shortiss <evanshortiss@gmail.com>" \
@@ -78,8 +74,9 @@ RUN set -ex && \
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
 COPY ./s2i/bin/ $STI_SCRIPTS_PATH
 
-# Add s2i nginx custom files
+# Add s2i nginx custom files, and default mime.types
 ADD ./contrib/nginx.default.conf /opt/app-root/etc/nginx.default.conf
+RUN  cp /etc/opt/rh/rh-nginx116/nginx/mime.types /opt/app-root/etc/mime.types
 
 # Drop the root user and make the content of /opt/app-root owned by user 1001
 RUN chown -R 1001:0 ${APP_ROOT} && chmod -R ug+rwx ${APP_ROOT} && \
