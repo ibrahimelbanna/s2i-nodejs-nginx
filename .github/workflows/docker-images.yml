@@ -49,7 +49,7 @@ jobs:
         run: docker build . --file alpine.Dockerfile --build-arg NGINX_VERSION="1.16" --build-arg NODE_VERSION=${{ matrix.versions }} --build-arg APK_REPO=http://dl-cdn.alpinelinux.org/alpine/v3.10/main --tag quay.io/$QUAY_USER/$IMAGE_NAME:${{ matrix.versions }}-nginx1.16
 
       - name: Tag "latest" image
-        if: ${{ matrix.versions }} == env.LATEST_VERSION
+        if: ${{ matrix.versions == env.LATEST_VERSION }}
         run: docker tag quay.io/$QUAY_USER/$IMAGE_NAME:${{ matrix.versions }}-nginx1.18 quay.io/$QUAY_USER/$IMAGE_NAME:latest
       
       - name: Log into the quay.io registry
@@ -57,7 +57,9 @@ jobs:
 
       - name: Push images to quay.io
         run: |
-          docker push quay.io/$QUAY_USER/$IMAGE_NAME:latest
           docker push quay.io/$QUAY_USER/$IMAGE_NAME:${{ matrix.versions }}-nginx1.18
           docker push quay.io/$QUAY_USER/$IMAGE_NAME:${{ matrix.versions }}-nginx1.16
 
+      - name: Push latest image to quay
+        if: ${{ matrix.versions == env.LATEST_VERSION }}
+        run: docker push quay.io/$QUAY_USER/$IMAGE_NAME:latest
