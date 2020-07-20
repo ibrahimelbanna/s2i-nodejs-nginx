@@ -5,7 +5,7 @@ echo "---> Removing Build Files"
 files=($(ls -a))
 for file in "${files[@]}"; do
   case "$file" in
-    "dist"|".s2i"|".."|"."|".npm-global"|"node_modules")
+    "dist"|".s2i"|".."|"."|".npm-global")
       ;;
     *)
       echo "Deleting $file"
