@@ -4,6 +4,20 @@ This is an updated fork of
 [jshmrtn/s2i-nodejs-nginx](https://github.com/jshmrtn/s2i-nodejs-nginx), that
 builds on their incredible work - thank you jshmrtn! 🤘
 
+## Usage
+
+```bash
+# The repository containing the static application you'd like to build
+export REPO_URL=https://github.com/evanshortiss/s2i-nodejs-nginx-example
+
+# Name for the resulting image tag
+export OUTPUT_IMAGE_NAME=nginx-webapp-runner
+
+# Build the specified repo using the latest Node.js version,
+# and serve it using the latest NGINX available in Alpine linux
+s2i build $REPO_URL quay.io/evanshortiss/s2i-nodejs-nginx:latest $OUTPUT_IMAGE_NAME
+```
+
 ## What Does it Do?
 
 When used in conjunction with [s2i (source-to-image)](https://github.com/openshift/source-to-image#installation),
@@ -14,25 +28,39 @@ The process is illustrated in the diagram below:
 
 ![How it Works](diagram.png "How it Works")
 
-## Supported Node.js Versions
+## Supported Version Combinations
 
-- 10
-- 12
-- 14
+* Node.js 14 and NGINX 1.18 (14-nginx1.18 / latest)
+* Node.js 14 and NGINX 1.16 (14-nginx1.16)
+* Node.js 12 and NGINX 1.18 (12-nginx1.18)
+* Node.js 12 and NGINX 1.16 (12-nginx1.16)
+* Node.js 10 and NGINX 1.18 (10-nginx1.18)
+* Node.js 10 and NGINX 1.16 (10-nginx1.16)
 
-Minor versions cannot be specified. The tag will always point to the latest
-release for that major version.
+Each of these is available at [quay.io/evanshortiss/s2i-nodejs-nginx](https://quay.io/repository/evanshortiss/s2i-nodejs-nginx)
+in the format `quay.io/evanshortiss/s2i-nodejs-nginx:14-nginx1.18`.
 
-## Usage
+Minor Node.js versions cannot be specified. Each tag is built using the Node.js
+Alpine base images from Docker Hub, e.g `14-alpine`.
 
-Note that the web application being built using this builder must:
+## Detailed Usage Instructions
+
+### Application Prerequisites
+
+The web application being built using this builder must:
 
 1. Contain a `build` entry in the `scripts` section of the *package.json*
 1. The `build` script must produce a *dist/* folder in the root of the repository (it can be added to *.gitignore*)
 1. An *index.html* must be at the root of the *dist/* folder
-1. Other static assets must be included in the *dist/* 
+1. All other static assets must be included in the *dist/* relative to *index.html*
 
 A sample application that satisfies these requirements can be found [here](https://github.com/evanshortiss/s2i-nodejs-nginx-example).
+
+### yarn/npm
+
+If the builder detects a *yarn.lock* in your repository it will use yarn
+instead of npm to install dependencies and execute the *build* script in your
+*package.json*.
 
 ### Source to Image (s2i) CLI
 
@@ -41,8 +69,8 @@ and [Docker](https://docs.docker.com/get-docker/) before running the `s2i build`
 command below to generate a container image.
 
 ```bash
-# Node.js version to use for building the application (does not support minor versions)
-export NODE_VER=14
+# Node.js version used for building the app, and NGINX the version for serving
+export BUILDER_VERSION=14-nginx1.18
 
 # The repository containing the application you'd like to build
 export REPO_URL=https://github.com/evanshortiss/s2i-nodejs-nginx-example
@@ -50,7 +78,7 @@ export REPO_URL=https://github.com/evanshortiss/s2i-nodejs-nginx-example
 # Name for the resulting image tag
 export OUTPUT_IMAGE_NAME=nginx-webapp-runner
 
-s2i build $REPO_URL quay.io/evanshortiss/s2i-nodejs-nginx:$NODE_VER $OUTPUT_IMAGE_NAME
+s2i build $REPO_URL quay.io/evanshortiss/s2i-nodejs-nginx:$BUILDER_VERSION $OUTPUT_IMAGE_NAME
 ```
 
 This will produce a container named `nginx-webapp-runner` that can be started
@@ -63,12 +91,12 @@ you can deploy the static site using the following command:
 
 ```bash
 # Node.js version to use for building the application (does not support minor versions)
-export NODE_VER=14
+export BUILDER_VERSION=14-nginx1.16
 
 # The repository containing the application you'd like to build
 export REPO_URL=https://github.com/evanshortiss/s2i-nodejs-nginx-example
 
-oc new-app quay.io/evanshortiss/s2i-nodejs-nginx:$NODE_VER~$REPO_URL
+oc new-app quay.io/evanshortiss/s2i-nodejs-nginx:$BUILDER_VERSION~$REPO_URL
 ```
 
 This will create a **BuildConfig** and the other necessary API Objects on
@@ -109,3 +137,5 @@ to set some environment variables.
 * `BASICAUTH_USERNAME` - the username used for basic auth.
 * `BASICAUTH_PASSWORD` - the password used for basic auth.
 * `BASICAUTH_TITLE` - the title used for basic auth.
+
+
