@@ -9,6 +9,7 @@ on:
 env:
   IMAGE_NAME: s2i-nodejs-nginx
   QUAY_USER: evanshortiss
+  LATEST_VERSION: "14" 
 
 jobs:
   # Run tests.
@@ -33,31 +34,30 @@ jobs:
   push:
     # Ensure test job passes before pushing image.
     needs: test
-
+    strategy:
+      matrix:
+        versions: ["14", "12", "10"]
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
-
     steps:
       - uses: actions/checkout@v2
 
+      - name: Build Alpine with NGINX 1.18
+        run: docker build . --file alpine.Dockerfile --build-arg NGINX_VERSION="1.18" --build-arg NODE_VERSION=${{ matrix.versions }} --build-arg APK_REPO=http://dl-cdn.alpinelinux.org/alpine/v3.12/main --tag quay.io/$QUAY_USER/$IMAGE_NAME:${{ matrix.versions }}-nginx1.18
+
+      - name: Build Alpine with NGINX 1.16
+        run: docker build . --file alpine.Dockerfile --build-arg NGINX_VERSION="1.16" --build-arg NODE_VERSION=${{ matrix.versions }} --build-arg APK_REPO=http://dl-cdn.alpinelinux.org/alpine/v3.10/main --tag quay.io/$QUAY_USER/$IMAGE_NAME:${{ matrix.versions }}-nginx1.16
+
+      - name: Tag "latest" image
+        if: ${{ matrix.versions }} == env.LATEST_VERSION
+        run: docker tag quay.io/$QUAY_USER/$IMAGE_NAME:${{ matrix.versions }}-nginx1.18 quay.io/$QUAY_USER/$IMAGE_NAME:latest
+      
       - name: Log into the quay.io registry
         run: echo "${{ secrets.QUAY_ROBOT_PASS }}" | docker login quay.io -u ${{ secrets.QUAY_ROBOT_NAME }} --password-stdin
-
-      - name: Build Node.js v14 image
-        run: docker build . --file 14.Dockerfile --tag quay.io/$QUAY_USER/$IMAGE_NAME:14
-      
-      - name: Build Node.js v12 image
-        run: docker build . --file 12.Dockerfile --tag quay.io/$QUAY_USER/$IMAGE_NAME:12
-
-      - name: Build Node.js v10 image
-        run: docker build . --file 10.Dockerfile --tag quay.io/$QUAY_USER/$IMAGE_NAME:10
-
-      - name: Tag Node.js v14 as latest
-        run: docker tag quay.io/$QUAY_USER/$IMAGE_NAME:14 quay.io/$QUAY_USER/$IMAGE_NAME:latest
 
       - name: Push images to quay.io
         run: |
           docker push quay.io/$QUAY_USER/$IMAGE_NAME:latest
-          docker push quay.io/$QUAY_USER/$IMAGE_NAME:14
-          docker push quay.io/$QUAY_USER/$IMAGE_NAME:12
-          docker push quay.io/$QUAY_USER/$IMAGE_NAME:10
+          docker push quay.io/$QUAY_USER/$IMAGE_NAME:${{ matrix.versions }}-nginx1.18
+          docker push quay.io/$QUAY_USER/$IMAGE_NAME:${{ matrix.versions }}-nginx1.16
+
