@@ -56,9 +56,10 @@ RUN cp /etc/nginx/mime.types ${APP_ROOT}/etc/mime.types
 # Create the 1001 user and provide permissions to application
 # folders and folders required by NGINX
 RUN adduser -s /bin/sh -u 1001 -G root -h ${HOME} -S -D default && \
-    chown -R 1001:0 ${APP_ROOT} && \
-    chown -R 1001:0 /var/lib/nginx/ && \
-    chown -R 1001:0 /run/nginx
+    chown -R 1001:0 ${APP_ROOT}
+
+RUN chgrp -R 0 /var/lib/nginx/ && chmod -R g+rwX /var/lib/nginx/
+RUN chgrp -R 0 /run/nginx && chmod -R g+rwX /run/nginx
 
 USER 1001
 
