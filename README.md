@@ -115,6 +115,22 @@ The out of the box configuration does the following:
 * Logs at INFO level to stdout
 * Includes NGINX default mime type mappings
 
+### Environment Variables
+
+#### Build-time
+
+Set these during an s2i build using the `--env` flag, or on the **BuildConfig** in OpenShift:
+
+* BUILD_OUTPUT_DIR (default: `dist`):
+  * Tells the build image where `npm run build` places assets.
+  * For example, if using [Create React App](https://create-react-app.dev/docs/production-build) you need to set `BUILD_OUTPUT_DIR=build`.
+  * With Webpack you might use a custom output directory, so you set `BUILD_OUTPUT_DIR=my-custom-dir`
+
+#### Runtime
+
+These can be set when running the built container. Currently none are supported.
+
+
 ### Customising nginx.conf
 
 You can add your custom `nginx.conf` to the container. While assembling, the builder looks for a nginx.conf file in your project `.s2i/nginx` directory. If there is a `nginx.conf` present at `.s2i/nginx/nginx.conf`, it will copy all contents of the `.s2i/nginx/` directory and put it into the target images `/opt/app-root/etc` directory. There the custom nginx.conf file will be used.
@@ -138,4 +154,61 @@ to set some environment variables.
 * `BASICAUTH_PASSWORD` - the password used for basic auth.
 * `BASICAUTH_TITLE` - the title used for basic auth.
 
+## Tips for Testing and Development
 
+If you'd like to contribute, then being able to test locally is a must. Here
+are some helpful commands to get running locally:
+
+### Build a Builder Image 
+
+This will produce a builder image that uses Node.js 14 and NGINX 1.18:
+
+```bash
+export NODE_VERSION=14
+export NGINX_VERSION=1.18
+
+# Must set the APK_REPO to 3.12 find NGINX 1.18
+export APK_REPO=http://dl-cdn.alpinelinux.org/alpine/v3.10/main
+
+docker build . -f alpine.Dockerfile \
+--build-arg NODE_VERSION=$NODE_VERSION \
+--build-arg NGINX_VERSION=$NGINX_VERSION \
+--build-arg APK_REPO=$APK_REPO \
+-t s2i-webapp-builder
+```
+
+Similarly, to use NGINX 1.16 a few tweaks must be made:
+
+```bash
+export NODE_VERSION=14
+export NGINX_VERSION=1.18
+
+# Must set the APK_REPO to 3.10 find NGINX 1.16
+export APK_REPO=http://dl-cdn.alpinelinux.org/alpine/v3.10/main
+
+docker build . -f alpine.Dockerfile \
+--build-arg NODE_VERSION=$NODE_VERSION \
+--build-arg NGINX_VERSION=$NGINX_VERSION \
+--build-arg APK_REPO=$AK_REPO \
+-t s2i-webapp-builder
+```
+
+### Testing Builder Images
+
+```bash
+# The repository that s2i should clone and build
+export REPO_URL="<the repo you want to build>"
+
+# The BUILD_OUTPUT_DIR needs to be set to "build"  if the application in
+# REPO_URL uses react-scripts build. Otherwise, change it according to your
+# custom output directory, e.g dist
+export BUILD_OUTPUT_DIR=build
+
+# Perform an s2i build.
+
+s2i build $REPO_URL --env BUILD_OUTPUT_DIR=$BUILD_OUTPUT_DIR s2i-webapp-builder s2i-webapp-runner
+
+
+# Run the resulting image and expose it on port 8080
+docker run -f --rm --name webapp -p 8080:8080 s2i-webapp-runner
+```

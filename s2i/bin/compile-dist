@@ -6,3 +6,10 @@ if [[ -f yarn.lock ]]; then
 else
   npm run build
 fi
+
+if [[ "$BUILD_OUTPUT_DIR" ]]; then
+  mkdir -p /opt/app-root/src/dist
+  SAFE_CONCAT_OUTPUT_DIR=$(node -e "console.log(path.join('/opt/app-root/src', '$BUILD_OUTPUT_DIR', '*'))")
+  echo "Copying assets from output directory (${SAFE_CONCAT_OUTPUT_DIR}) to dist directory (/opt/app-root/src/dist)"
+  cp -R $SAFE_CONCAT_OUTPUT_DIR /opt/app-root/src/dist
+fi
