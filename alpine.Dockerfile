@@ -10,6 +10,7 @@ FROM node:${NODE_VERSION}-alpine
 # NODE_VERSION is set in the alpine image already so we don't redeclare it
 ARG NGINX_VERSION
 ARG APK_REPO
+ARG NODE_VERSION
 
 EXPOSE 8080
 EXPOSE 8443
