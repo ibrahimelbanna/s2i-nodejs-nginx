@@ -177,11 +177,11 @@ docker build . -f alpine.Dockerfile \
 -t s2i-webapp-builder
 ```
 
-Similarly, to use NGINX 1.16 a few tweaks must be made:
+To use NGINX 1.16, change the `NGINX_VERSION` and `APK_REPO` variables:
 
 ```bash
 export NODE_VERSION=14
-export NGINX_VERSION=1.18
+export NGINX_VERSION=1.16
 
 # Must set the APK_REPO to 3.10 find NGINX 1.16
 export APK_REPO=http://dl-cdn.alpinelinux.org/alpine/v3.10/main
