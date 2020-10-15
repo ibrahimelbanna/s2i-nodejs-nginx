@@ -189,7 +189,7 @@ export APK_REPO=http://dl-cdn.alpinelinux.org/alpine/v3.10/main
 docker build . -f alpine.Dockerfile \
 --build-arg NODE_VERSION=$NODE_VERSION \
 --build-arg NGINX_VERSION=$NGINX_VERSION \
---build-arg APK_REPO=$AK_REPO \
+--build-arg APK_REPO=$APK_REPO \
 -t s2i-webapp-builder
 ```
 

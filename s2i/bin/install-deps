@@ -1,5 +1,11 @@
 #!/bin/bash -e
 
+# Change the npm registry mirror if provided
+if [ -n "$NPM_MIRROR" ]; then
+  echo "---> Setting NPM mirror..."
+  npm config set registry $NPM_MIRROR
+fi
+
 if [[ -f yarn.lock ]]; then
   echo "---> Installing your dependencies using Node.js $(node -v) and yarn v$(yarn -v)..."
   yarn config set prefix $(npm config get prefix)

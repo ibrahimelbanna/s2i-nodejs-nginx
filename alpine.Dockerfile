@@ -59,7 +59,7 @@ RUN cp /etc/nginx/mime.types ${APP_ROOT}/etc/mime.types
 RUN adduser -s /bin/sh -u 1001 -G root -h ${HOME} -S -D default && \
     chown -R 1001:0 ${APP_ROOT}
 
-RUN chgrp -R 0 /var/lib/nginx/ && chmod -R g+rwX /var/lib/nginx/
+RUN chgrp -R 0 /var/lib/nginx/ && chmod -R g+rwX /var/lib/nginx/ && find /var/lib/nginx -type d -exec chmod g+x {} +
 RUN chgrp -R 0 /run/nginx && chmod -R g+rwX /run/nginx
 
 USER 1001
