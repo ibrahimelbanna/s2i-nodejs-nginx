@@ -4,7 +4,7 @@ ARG YARN_VERSION
 
 FROM centos/nginx-116-centos7:latest
 
-EXPOSE 8080
+EXPOSE 8090
 
 USER root
 
@@ -22,7 +22,7 @@ ENV NPM_CONFIG_LOGLEVEL=info \
 
 LABEL io.k8s.description="Platform for building and running static sites with Node.js and NGINX" \
       io.k8s.display-name="build-nodejs-nginx Node.js v$NODE_VERSION" \
-      io.openshift.expose-services="8080:http" \
+      io.openshift.expose-services="8090:http" \
       io.openshift.tags="builder,nodejs,nodejs$NODE_VERSION,nginx" \
       com.redhat.deployments-dir="${APP_ROOT}/src" \
       io.origin.builder-version="$GIT_VERSION" \

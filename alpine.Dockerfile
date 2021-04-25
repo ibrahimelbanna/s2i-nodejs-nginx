@@ -12,7 +12,7 @@ ARG NGINX_VERSION
 ARG APK_REPO
 ARG NODE_VERSION
 
-EXPOSE 8080
+EXPOSE 8090
 EXPOSE 8443
 
 ENV NPM_CONFIG_LOGLEVEL=info \
@@ -26,7 +26,7 @@ LABEL io.k8s.description="Platform for building and running static sites with No
       io.k8s.display-name="Node.js v$ and NGINX v${NGINX_VERSION}" \
       io.openshift.s2i.scripts-url=image:///usr/libexec/s2i \
       io.s2i.scripts-url=image:///usr/libexec/s2i \
-      io.openshift.expose-services="8080:http" \
+      io.openshift.expose-services="8090:http" \
       io.openshift.expose-services="8443:https" \
       io.openshift.tags="builder,nodejs,nodejs${NODE_VERSION},nginx" \
       com.redhat.deployments-dir="${APP_ROOT}/src" \

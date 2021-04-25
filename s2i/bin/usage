@@ -8,5 +8,5 @@ Basic usage: s2i build $STATIC_APP_GIT_REPO quay.io/evanshortiss/s2i-nodejs-ngin
 See the README on https://github.com/evanshortiss/s2i-nodejs-nginx for more details.
 
 You can run the resulting image via:
-docker run -p 8080:8080 static-app-image
+docker run -p 8090:8090 static-app-image
 EOF
