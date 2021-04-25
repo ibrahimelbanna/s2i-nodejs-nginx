@@ -1,6 +1,5 @@
-ARG NODE_VERSION
-ARG NPM_VERSION
-ARG YARN_VERSION
+ARG 14
+ARG 6.14.12
 
 FROM centos/nginx-116-centos7:latest
 
@@ -64,9 +63,6 @@ RUN set -ex && \
   gpg --batch -d SHASUMS256.txt.asc | grep " node-v${NODE_VERSION}-linux-x64.tar.gz\$" | sha256sum -c - && \
   tar -zxf node-v${NODE_VERSION}-linux-x64.tar.gz -C /usr/local --strip-components=1 && \
   npm install -g npm@${NPM_VERSION} && \
-  wget https://dl.yarnpkg.com/rpm/yarn.repo -O /etc/yum.repos.d/yarn.repo  && \
-  yum install -y --setopt=tsflags=nodocs yarn-${YARN_VERSION} && \
-  rpm -V yarn-${YARN_VERSION} && \
   yum clean all -y && \
   find /usr/local/lib/node_modules/npm -name test -o -name .bin -type d | xargs rm -rf; \
   rm -rf ~/node-v${NODE_VERSION}-linux-x64.tar.gz ~/SHASUMS256.txt.asc /tmp/node-v${NODE_VERSION} ~/.npm ~/.node-gyp ~/.gnupg /usr/share/man /tmp/* /usr/local/lib/node_modules/npm/man /usr/local/lib/node_modules/npm/doc /usr/local/lib/node_modules/npm/html
