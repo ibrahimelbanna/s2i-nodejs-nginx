@@ -82,7 +82,7 @@ s2i build $REPO_URL quay.io/evanshortiss/s2i-nodejs-nginx:$BUILDER_VERSION $OUTP
 ```
 
 This will produce a container named `nginx-webapp-runner` that can be started
-via `docker run -p 8080:8080 nginx-webapp-runner`.
+via `docker run -p 8090:8090 nginx-webapp-runner`.
 
 ### OpenShift CLI
 
@@ -109,7 +109,7 @@ it.
 
 The out of the box configuration does the following:
 
-* Listens on port 8080
+* Listens on port 8090
 * Serves *dist/index.html* for the `/` route
 * Applies GZIP compression to text-based assets larger than 1000 bytes
 * Logs at INFO level to stdout
@@ -209,6 +209,6 @@ export BUILD_OUTPUT_DIR=build
 s2i build $REPO_URL --env BUILD_OUTPUT_DIR=$BUILD_OUTPUT_DIR s2i-webapp-builder s2i-webapp-runner
 
 
-# Run the resulting image and expose it on port 8080
-docker run -f --rm --name webapp -p 8080:8080 s2i-webapp-runner
+# Run the resulting image and expose it on port 8090
+docker run -f --rm --name webapp -p 8090:8090 s2i-webapp-runner
 ```
