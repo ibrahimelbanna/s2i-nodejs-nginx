@@ -5,7 +5,7 @@ echo "---> Removing Build Files"
 files=($(ls -a))
 for file in "${files[@]}"; do
   case "$file" in
-    "dist"|".s2i"|".."|".")
+    "dist"|".s2i"|"..")
       ;;
     *)
       echo "Deleting $file"
