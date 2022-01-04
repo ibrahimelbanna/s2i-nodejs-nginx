@@ -4,7 +4,7 @@ echo "---> Compiling your static assets..."
 if [[ -f yarn.lock ]]; then
   yarn run build
 else
-  npm run build
+  npm run build:$REACT_APP_ENV
 fi
 
 if [[ "$BUILD_OUTPUT_DIR" ]]; then

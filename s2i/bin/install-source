@@ -2,3 +2,8 @@
 
 echo "---> Installing application source..."
 mv /tmp/src/* ./
+cp /tmp/src/.env.develop* ./
+cp /tmp/src/.env.production ./
+cp /tmp/src/.env.test ./
+cp /tmp/src/.env.stage ./
+cp /tmp/src/.env ./
