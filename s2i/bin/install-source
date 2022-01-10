@@ -7,3 +7,4 @@ cp /tmp/src/.env.production ./
 cp /tmp/src/.env.test ./
 cp /tmp/src/.env.stage ./
 cp /tmp/src/.env ./
+cp /tmp/src/.npmrc ./
